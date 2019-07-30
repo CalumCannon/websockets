@@ -18,6 +18,7 @@ module.exports = function(socket){
       y: 10
     }
 
+    //players[socket.id] = player;
     players[socket.id] = player;
     console.log(playerCount);
   });

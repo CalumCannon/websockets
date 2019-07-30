@@ -4,7 +4,7 @@ import UserInput from '../helpers/userInput.js'
 import Renderer from '../Renderer/Renderer.js'
 import {USER_CONNECTED, LOGOUT, USER_INPUT, GAME_UPDATE} from '../events.js'
 //Heroku bit here?
-const socketUrl = "http://192.168.0.206:5000"
+const socketUrl = "http://192.168.8.101:5000"
 export default class Layout extends Component{
 
   constructor(props){
@@ -16,18 +16,21 @@ export default class Layout extends Component{
       players:{}
     };
     this.updateGameState = this.updateGameState.bind(this);
+
   }
 
   componentWillMount(){
     this.initSocket()
-
+    setTimeout(this.props.initGame, 5000)
   }
+
 
   initSocket = () => {
     const socket = io(socketUrl)
     socket.on('connect', () => {
       console.log("CONNECTED");
       socket.emit(USER_CONNECTED);
+
     })
     this.setState({socket})
     socket.on(GAME_UPDATE, (playersIN) => this.updateGameState(playersIN/**[socket.id]**/));
@@ -48,15 +51,19 @@ export default class Layout extends Component{
   usrInput = (movement) => {
     const {socket} = this.state
     socket.emit(USER_INPUT, movement)
-    //console.log("User input");
+
+    if(this.props.reactToUnityCom != undefined){
+
+        this.props.reactToUnityCom(movement);
+    }
+
   }
 
   updateGameState(gameSatePlayers){
   //  console.dir(gameSatePlayers);
     this.setState({players:gameSatePlayers})
+
   }
-
-
 
   render(){
     const {socket} = this.state
@@ -75,6 +82,7 @@ export default class Layout extends Component{
       <p>LAYOUT COMPONENT</p>
       <UserInput handleUserInput={this.usrInput} />
       <Renderer players={this.state.players}/>
+      <button onClick={this.props.initGame}>START GAME</button>
       </div>
     );
   }

@@ -9,9 +9,7 @@ export default class UserInput extends Component {
   }
 
 
-
-  render(){
-
+  componentDidMount(){
     var movement = {
       up: false,
       down: false,
@@ -60,12 +58,16 @@ export default class UserInput extends Component {
     //Set interval seems to fuck it
     setInterval(function() {
       handleUserClick();
-    }, 1000 / 2);
+    }, 1000 / 60);
 
+  }
+
+
+
+  render(){
     return(
       <div>
       <p>USER INPUT COMPONENT</p>
-      <button onClick={handleUserClick}>CLICK ME</button>
       </div>
     )
   }
